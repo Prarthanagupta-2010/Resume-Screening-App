@@ -3,6 +3,27 @@
 # pip install scikit-learn
 # pip install python-docx
 # pip install PyPDF2
+import os
+from kaggle.api.kaggle_api_extended import KaggleApi
+import zipfile
+
+# Authenticate Kaggle API
+os.environ['prarthanagupta03'] = st.secrets["kaggle"]["prarthanagupta03"]
+os.environ['1f28f33319aedc1533a363054b03e12d'] = st.secrets["kaggle"]["1f28f33319aedc1533a363054b03e12d"]
+
+api = KaggleApi()
+api.authenticate()
+
+# Download the file from Kaggle (replace with your actual dataset path and file name)
+DATASET = "prarthanagupta03/UpdatedResumeDataSet.csv"
+FILE_NAME = "clf.pkl"
+
+if not os.path.exists(FILE_NAME):
+    api.dataset_download_file(DATASET, FILE_NAME)
+    # If zipped, unzip
+    if os.path.exists(FILE_NAME + ".zip"):
+        with zipfile.ZipFile(FILE_NAME + ".zip", "r") as zip_ref:
+            zip_ref.extractall(".")
 
 
 import streamlit as st
@@ -10,6 +31,7 @@ import pickle
 import docx  # Extract text from Word file
 import PyPDF2  # Extract text from PDF
 import re
+import os
 
 # Load pre-trained model and TF-IDF vectorizer (ensure these are saved earlier)
 svc_model = pickle.load(open('clf.pkl', 'rb'))  # Example file name, adjust as needed
